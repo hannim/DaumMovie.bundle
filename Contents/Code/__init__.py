@@ -4,7 +4,6 @@
 import urllib, unicodedata
 
 DAUM_MOVIE_SRCH   = "http://movie.daum.net/search.do?type=%s&q=%s"
-
 DAUM_MOVIE_DETAIL = "http://m.movie.daum.net/data/movie/movie_info/detail.json?movieId=%s"
 DAUM_MOVIE_CAST   = "http://m.movie.daum.net/data/movie/movie_info/cast_crew.json?pageNo=1&pageSize=100&movieId=%s"
 DAUM_MOVIE_PHOTO  = "http://m.movie.daum.net/data/movie/photo/movie/list.json?pageNo=1&pageSize=100&id=%s"
@@ -62,6 +61,8 @@ def updateDaumMovie(cate, metadata):
   data = JSON.ObjectFromURL(url=url_tmpl % metadata.id)
   info = data['data']
   metadata.title = info['titleKo']
+  Season =  metadata.title[-1:]   #시즌정보를 파싱하기 위하여 변수에 이름 설정
+  
   metadata.original_title = info['titleEn']
   metadata.genres.clear()
   if cate == 'tv':
@@ -148,9 +149,9 @@ def updateDaumMovie(cate, metadata):
     data = JSON.ObjectFromURL(url=DAUM_TV_EPISODE % metadata.id)
     for item in data['data']:
       episode_num = item['episodeSeq']
-      episode = metadata.seasons['1'].episodes[episode_num]
+      episode = metadata.seasons[Season].episodes[episode_num]
       episode.title = item['episodeTitle']
-      episode.summary = item['episodeIntroduce'].strip()
+      episode.summary = Season  #item['episodeIntroduce'].strip()
       if item['telecastDate']:
         episode.originally_available_at = Datetime.ParseDate(item['telecastDate']).date()
       try: episode.rating = float(item['rate'])
