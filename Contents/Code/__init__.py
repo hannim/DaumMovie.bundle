@@ -61,7 +61,7 @@ def updateDaumMovie(cate, metadata):
   data = JSON.ObjectFromURL(url=url_tmpl % metadata.id)
   info = data['data']
   metadata.title = info['titleKo']
-  Season =  metadata.title[-1:]   #시즌정보를 파싱하기 위하여 변수에 이름 설정
+  Season =  metadata.title[-2:]   #시즌정보를 파싱하기 위하여 변수에 이름 설정
   
   metadata.original_title = info['titleEn']
   metadata.genres.clear()
